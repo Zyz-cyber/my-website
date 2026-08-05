@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>zy's desktop</title>
+    <!-- 引入外部 CSS 文件 -->
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body data-theme="light">
+    <!-- 日夜切换按钮 -->
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <span id="theme-icon">☀️</span>
+      <!-- <span id="theme-text">Day Mode</span> -->
+    </button>
+
+    <!-- Canvas 星空渲染层 -->
+    <canvas id="stars-canvas"></canvas>
+
+    <!-- 开场动效 Overlay -->
+    <div id="intro-overlay" class="intro-overlay">
+      <!-- 传送门漩涡画布 -->
+      <div class="portal-wrapper">
+        <canvas id="portal-canvas"></canvas>
+      </div>
+
+      <!-- 文件夹结构 -->
+      <div class="folder-wrapper" id="folder" onclick="openPortfolio()">
+        <div class="folder-back"></div>
+
+        <div class="folder-cards">
+          <div class="preview-card card-web-sub">
+            <div class="card-header-dots">
+              <span style="background: #ff5f56"></span>
+              <span style="background: #ffbd2e"></span>
+              <span style="background: #27c93f"></span>
+            </div>
+            <div class="card-body-skeleton">🌐 Design_System.html</div>
+          </div>
+
+          <div class="preview-card card-doc-sub">
+            <div class="card-body-skeleton">📄 Readme_v2.0.md</div>
+          </div>
+
+          <div class="preview-card card-folder-sub">
+            <div class="card-body-skeleton">📁 Projects_Archive</div>
+          </div>
+
+          <div class="preview-card card-web-main">
+            <div class="card-header-dots">
+              <span style="background: #ff5f56"></span>
+              <span style="background: #ffbd2e"></span>
+              <span style="background: #27c93f"></span>
+            </div>
+            <div class="card-body-skeleton">🌐 hi! i'm shar</div>
+          </div>
+        </div>
+
+        <div class="folder-cover">
+          <div class="folder-title">My Portfolio</div>
+          <div class="folder-sub">Hover to inspect / Click to enter</div>
+        </div>
+      </div>
+
+      <div class="click-hint">Click folder to enter desktop</div>
+    </div>
+
+    <!-- 主窗口 (Home) -->
+    <div id="home-window" class="window">
+      <div class="window-header">
+        <span>home</span>
+      </div>
+      <div class="window-body">
+        <h1 class="title">hi! <span>i'm Zhao Yuanzhuo</span></h1>
+        <p class="subtitle">illustrator, animator, and developer</p>
+
+        <div class="nav-icons">
+          <button class="nav-item" onclick="openWindow('about-window')">
+            <span class="icon">ℹ️</span>about
+          </button>
+          <button class="nav-item" onclick="openWindow('links-window')">
+            <span class="icon">🔗</span>links
+          </button>
+          <button class="nav-item" onclick="openWindow('work-window')">
+            <span class="icon">📁</span>work
+          </button>
+          <button class="nav-item" onclick="openWindow('faq-window')">
+            <span class="icon">❓</span>faq
+          </button>
+          <button class="nav-item" onclick="openWindow('contact-window')">
+            <span class="icon">✉️</span>contact
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 子窗口 1: About -->
+    <div id="about-window" class="window sub-window">
+      <div class="window-header">
+        <span>about</span>
+        <button class="close-btn" onclick="closeWindow('about-window')">
+          [x]
+        </button>
+      </div>
+      <div class="window-body">
+        <div class="profile-header">
+          <div class="avatar">🐸</div>
+          <div class="profile-info">
+            <h2>Zhao Yuanzhuo</h2>
+            <p>Freelance illustrator & developer</p>
+          </div>
+        </div>
+        <hr
+          style="
+            border: none;
+            border-top: 1px solid rgba(150, 150, 150, 0.3);
+            margin: 15px 0;
+            width: 100%;
+          "
+        />
+        <p style="font-size: 13px; line-height: 1.6">
+          <strong>LANGUAGE PROFICIENCY</strong><br />
+          i have native fluency in Chinese, and can speak in conversational
+          English.
+        </p>
+      </div>
+    </div>
+
+    <!-- 子窗口 2: Work -->
+    <div id="work-window" class="window sub-window">
+      <div class="window-header">
+        <span>work</span>
+        <button class="close-btn" onclick="closeWindow('work-window')">
+          [x]
+        </button>
+      </div>
+      <div class="window-body">
+        <p>📁 我的作品展示：</p>
+        <p>1. 插画作品 A</p>
+        <p>2. 网页项目 B</p>
+      </div>
+    </div>
+
+    <!-- 子窗口 3: Links -->
+    <div id="links-window" class="window sub-window">
+      <div class="window-header">
+        <span>links</span>
+        <button class="close-btn" onclick="closeWindow('links-window')">
+          [x]
+        </button>
+      </div>
+      <div class="window-body">
+        <p>🔗 个人链接：</p>
+        <p>
+          <a
+            href="https://github.com"
+            target="_blank"
+            style="color: var(--accent-color)"
+            >GitHub</a
+          >
+        </p>
+      </div>
+    </div>
+
+    <!-- 子窗口 4: FAQ -->
+    <div id="faq-window" class="window sub-window">
+      <div class="window-header">
+        <span>faq</span>
+        <button class="close-btn" onclick="closeWindow('faq-window')">
+          [x]
+        </button>
+      </div>
+      <div class="window-body">
+        <p><strong>Q: 常见问题解答？</strong></p>
+        <p>A: 可以在这里添加你的问题和回答。</p>
+      </div>
+    </div>
+
+    <!-- 子窗口 5: Contact -->
+    <div id="contact-window" class="window sub-window">
+      <div class="window-header">
+        <span>contact</span>
+        <button class="close-btn" onclick="closeWindow('contact-window')">
+          [x]
+        </button>
+      </div>
+      <div class="window-body">
+        <p>✉️ 联系方式：</p>
+        <p>Email: zhao_yuanzhuo@outlook.com</p>
+      </div>
+    </div>
+
+    <!-- 页脚 -->
+    <div class="footer">
+      <p>© 2026 Zhao Yuanzhuo</p>
+    </div>
+
+    <!-- 窗口拖拽与交互引擎 -->
+    <script>
+      let highestZIndex = 100;
+
+      // 🌟 点击文件夹进入桌面的主逻辑
+      function openPortfolio() {
+        const overlay = document.getElementById("intro-overlay");
+        const homeWin = document.getElementById("home-window");
+
+        // 1. 瞬间隐藏开场蒙版
+        if (overlay) {
+          overlay.classList.add("hidden");
+          overlay.style.display = "none";
+        }
+
+        // 2. 显示主窗口，触发【弹跳动画】
+        if (homeWin) {
+          homeWin.style.display = "block";
+          centerWindow(homeWin);
+          bringToFront(homeWin);
+
+          // 添加弹跳类
+          homeWin.classList.remove("window-pop-out");
+          void homeWin.offsetWidth; // 触发 DOM 重绘
+          homeWin.classList.add("window-pop-out");
+        }
+      }
+
+      function centerWindow(win) {
+        if (!win) return;
+        const x = (window.innerWidth - win.offsetWidth) / 2;
+        const y = (window.innerHeight - win.offsetHeight) / 2;
+        win.style.left = Math.max(10, x) + "px";
+        win.style.top = Math.max(10, y) + "px";
+      }
+
+      function openWindow(id) {
+        const win = document.getElementById(id);
+        if (win.style.display !== "block") {
+          win.style.display = "block";
+          const offset =
+            (document.querySelectorAll('.window[style*="display: block"]')
+              .length -
+              1) *
+            20;
+          const x = (window.innerWidth - win.offsetWidth) / 2 + offset;
+          const y = (window.innerHeight - win.offsetHeight) / 2 + offset;
+          win.style.left = Math.max(10, x) + "px";
+          win.style.top = Math.max(10, y) + "px";
+        }
+        bringToFront(win);
+      }
+
+      function closeWindow(id) {
+        document.getElementById(id).style.display = "none";
+      }
+
+      function bringToFront(win) {
+        highestZIndex++;
+        win.style.zIndex = highestZIndex;
+      }
+
+      document.querySelectorAll(".window").forEach((win) => {
+        win.addEventListener("mousedown", () => bringToFront(win));
+      });
+
+      let isDragging = false;
+      let activeWin = null;
+      let startX, startY, initialLeft, initialTop;
+
+      document.querySelectorAll(".window-header").forEach((header) => {
+        header.addEventListener("mousedown", (e) => {
+          if (e.target.classList.contains("close-btn")) return;
+
+          isDragging = true;
+          activeWin = header.closest(".window");
+          bringToFront(activeWin);
+
+          startX = e.clientX;
+          startY = e.clientY;
+          initialLeft = parseInt(window.getComputedStyle(activeWin).left) || 0;
+          initialTop = parseInt(window.getComputedStyle(activeWin).top) || 0;
+
+          document.addEventListener("mousemove", onMouseMove);
+          document.addEventListener("mouseup", onMouseUp);
+        });
+      });
+
+      function onMouseMove(e) {
+        if (!isDragging || !activeWin) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        activeWin.style.left = initialLeft + dx + "px";
+        activeWin.style.top = initialTop + dy + "px";
+      }
+
+      function onMouseUp() {
+        isDragging = false;
+        activeWin = null;
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      }
+    </script>
+
+    <!-- 日夜模式与 Canvas 星空逻辑 -->
+    <script>
+      function toggleTheme() {
+        const body = document.body;
+        const isDark = body.getAttribute("data-theme") === "dark";
+
+        if (isDark) {
+          body.setAttribute("data-theme", "light");
+          document.getElementById("theme-icon").textContent = "☀️";
+          document.getElementById("theme-text").textContent = "Day Mode";
+        } else {
+          body.setAttribute("data-theme", "dark");
+          document.getElementById("theme-icon").textContent = "🌙";
+          document.getElementById("theme-text").textContent = "Night Mode";
+        }
+      }
+
+      const canvas = document.getElementById("stars-canvas");
+      const ctx = canvas.getContext("2d");
+      let stars = [];
+      const starCount = 14;
+      const mouse = { x: -9999, y: -9999, radius: 100 };
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight * 0.55;
+        initStars();
+      }
+
+      class Star {
+        constructor(x, y) {
+          this.x = x;
+          this.y = y;
+          this.baseRadius = Math.random() * 1.5 + 2.5;
+          this.radius = this.baseRadius;
+          this.baseGlowBlur = 5;
+          this.glowBlur = this.baseGlowBlur;
+          this.baseAlpha = 0.35;
+          this.alpha = this.baseAlpha;
+        }
+
+        draw() {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.shadowColor = `rgba(255, 255, 255, ${this.alpha * 0.8})`;
+          ctx.shadowBlur = this.glowBlur;
+          ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+          ctx.fill();
+          ctx.restore();
+        }
+
+        update() {
+          const dx = mouse.x - this.x;
+          const dy = mouse.y - this.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < mouse.radius) {
+            const factor = (mouse.radius - distance) / mouse.radius;
+            const targetGlow = this.baseGlowBlur + factor * 18;
+            const targetRadius = this.baseRadius + factor * 1.2;
+            const targetAlpha = 0.85;
+
+            this.glowBlur += (targetGlow - this.glowBlur) * 0.15;
+            this.radius += (targetRadius - this.radius) * 0.15;
+            this.alpha += (targetAlpha - this.alpha) * 0.15;
+          } else {
+            this.glowBlur += (this.baseGlowBlur - this.glowBlur) * 0.1;
+            this.radius += (this.baseRadius - this.radius) * 0.1;
+            this.alpha += (this.baseAlpha - this.alpha) * 0.1;
+          }
+
+          this.draw();
+        }
+      }
+
+      function initStars() {
+        stars = [];
+        const cols = 5;
+        const rows = 3;
+        const cellWidth = canvas.width / cols;
+        const cellHeight = canvas.height / rows;
+
+        let gridCells = [];
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            gridCells.push({ r, c });
+          }
+        }
+
+        gridCells.sort(() => Math.random() - 0.5);
+
+        for (let i = 0; i < Math.min(starCount, gridCells.length); i++) {
+          const cell = gridCells[i];
+          const x =
+            cell.c * cellWidth +
+            Math.random() * (cellWidth * 0.7) +
+            cellWidth * 0.15;
+          const y =
+            cell.r * cellHeight +
+            Math.random() * (cellHeight * 0.7) +
+            cellHeight * 0.15;
+          stars.push(new Star(x, y));
+        }
+      }
+
+      function animateStars() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        stars.forEach((star) => star.update());
+        requestAnimationFrame(animateStars);
+      }
+
+      window.addEventListener("mousemove", (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      });
+
+      window.addEventListener("mouseleave", () => {
+        mouse.x = -9999;
+        mouse.y = -9999;
+      });
+
+      window.addEventListener("resize", resizeCanvas);
+
+      resizeCanvas();
+      animateStars();
+    </script>
+
+    <!-- 波浪动画依赖库与配置 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/wavify@1.0.0/wavify.js"></script>
+
+    <div
+      style="
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 400px;
+        pointer-events: none;
+        z-index: 0;
+      "
+    >
+      <svg
+        id="wave-canvas"
+        style="width: 100%; height: 100%"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient id="waveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" id="wave-stop-top" stop-color="var(--wave-top)" />
+            <stop
+              offset="100%"
+              id="wave-stop-bottom"
+              stop-color="var(--wave-bottom)"
+            />
+          </linearGradient>
+        </defs>
+        <path id="wave" fill="url(#waveGradient)" d="" />
+      </svg>
+    </div>
+
+    <script>
+      var waveObj = wavify(document.querySelector("#wave"), {
+        height: 60,
+        amplitude: 25,
+        speed: 0.15,
+        bones: 4,
+        color: "none",
+      });
+      document
+        .querySelector("#wave")
+        .setAttribute("fill", "url(#waveGradient)");
+
+      // 水面传送门 Canvas
+      (function initPortal() {
+        const pCanvas = document.getElementById("portal-canvas");
+        if (!pCanvas) return;
+        const pCtx = pCanvas.getContext("2d");
+
+        const size = 750;
+        pCanvas.width = size;
+        pCanvas.height = size;
+        const cx = size / 2;
+        const cy = size / 2;
+
+        let time = 0;
+        const numPoints = 12;
+        const baseRadius = 310;
+
+        function drawBlobPath(ctx, rOffset = 0, phaseOffset = 0) {
+          ctx.beginPath();
+          const points = [];
+          for (let i = 0; i < numPoints; i++) {
+            const angle = (i / numPoints) * Math.PI * 2;
+            const distortion =
+              Math.sin(time * 2 + i * 1.5 + phaseOffset) * 16 +
+              Math.cos(time * 1.5 - i * 2.1) * 10;
+            const r = baseRadius + rOffset + distortion;
+            points.push({
+              x: cx + Math.cos(angle) * r,
+              y: cy + Math.sin(angle) * r,
+            });
+          }
+
+          ctx.moveTo(
+            (points[0].x + points[numPoints - 1].x) / 2,
+            (points[0].y + points[numPoints - 1].y) / 2,
+          );
+          for (let i = 0; i < numPoints; i++) {
+            const nextIndex = (i + 1) % numPoints;
+            const midX = (points[i].x + points[nextIndex].x) / 2;
+            const midY = (points[i].y + points[nextIndex].y) / 2;
+            ctx.quadraticCurveTo(points[i].x, points[i].y, midX, midY);
+          }
+          ctx.closePath();
+        }
+
+        function renderPortal() {
+          pCtx.clearRect(0, 0, size, size);
+          time += 0.02;
+
+          const isDark = document.body.getAttribute("data-theme") === "dark";
+
+          pCtx.save();
+          drawBlobPath(pCtx, 8, 0.5);
+          pCtx.fillStyle = isDark ? "#4682B4" : "rgba(255, 255, 255, 0.85)";
+          pCtx.fill();
+          pCtx.restore();
+
+          pCtx.save();
+          drawBlobPath(pCtx, 0, 0);
+
+          const grad = pCtx.createRadialGradient(cx, cy, 0, cx, cy, baseRadius);
+
+          if (isDark) {
+            grad.addColorStop(0, "#090b0e");
+            grad.addColorStop(0.4, "#16233b");
+            grad.addColorStop(0.85, "#204368");
+            grad.addColorStop(1, "#326295");
+          } else {
+            grad.addColorStop(0, "#ffffff");
+            grad.addColorStop(0.3, "#cce7ff");
+            grad.addColorStop(0.7, "#71baff");
+            grad.addColorStop(1, "#53a8ff");
+          }
+
+          pCtx.fillStyle = grad;
+          pCtx.fill();
+          pCtx.restore();
+
+          pCtx.save();
+          pCtx.translate(cx, cy);
+          pCtx.rotate(time * 0.3);
+          pCtx.strokeStyle = isDark
+            ? "rgba(255, 255, 255, 0.12)"
+            : "rgba(255, 255, 255, 0.35)";
+          pCtx.lineWidth = 3;
+          for (let i = 0; i < 3; i++) {
+            pCtx.beginPath();
+            pCtx.arc(0, 0, 60 + i * 75, i * 1.5, i * 1.5 + Math.PI * 0.8);
+            pCtx.stroke();
+          }
+          pCtx.restore();
+
+          requestAnimationFrame(renderPortal);
+        }
+
+        renderPortal();
+      })();
+    </script>
+  </body>
+</html>

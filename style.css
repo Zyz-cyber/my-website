@@ -1,0 +1,549 @@
+/* ================= 全局与日夜模式变量 ================= */
+:root {
+  /* 白天天空：顶部稍深/纯净蓝 -> 底部接近白色水天交界 */
+  --sky-bg: linear-gradient(to bottom, #ffffff 0%, #bee1ff 100%);
+  --sky-bg1: radial-gradient(
+    circle at center,
+    #ffffff 0%,
+    #ffffff 40%,
+    #97e0ff 100%
+  );
+
+  /* 👈 1. 添加波浪渐变色（白天） */
+  --wave-top: #90c9ff;
+  --wave-bottom: #2db2ff;
+  --stars-opacity: 0;
+
+  /* 白天模式 - 保持原始 100% 不变 */
+  --win-bg: #ffffff;
+  --win-border: rgb(159, 159, 159);
+  --win-header-bg: rgb(70, 70, 70);
+  --win-header-text: #ffffff;
+  --text-main: #333333;
+  --win-bg1: #ffffff41;
+
+  --text-sub: #666666;
+  --accent-color: #f39c12;
+  --wave-color: lightgreen;
+  --footer-color: #555555;
+
+  /* 白天模式 Overlay 变量 */
+  --liquid-glass-bg: radial-gradient(
+    circle at 50% 30%,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.25) 60%,
+    rgba(240, 245, 250, 0.5) 100%
+  );
+  --folder-back-bg: #1e99ce;
+  --folder-cover-bg: #f39c12;
+  --folder-text-color: #ffffff;
+  --folder-border: none; /* 白天不要边框 */
+}
+
+/* 夜晚模式 - 完全精准对标【图1】配色 */
+[data-theme="dark"] {
+  --sky-bg: linear-gradient(to bottom, #090b0e 0%, #24417b 100%);
+  --sky-bg1: linear-gradient(to bottom, #090b0e 0%, #24417b 100%);
+  --wave-top: #255b8c;
+  --wave-bottom: #0f2b48;
+  --stars-opacity: 1;
+
+  --win-bg: #122338;
+  --win-border: rgba(255, 255, 255, 0.85);
+  --win-header-bg: #000000;
+  --win-header-text: #ffffff;
+  --text-main: #ffffff;
+  --win-bg1: #122338;
+
+  --text-sub: #a1b0c0;
+  --accent-color: #82c8e6;
+  --wave-color: #1b4871;
+  --footer-color: #6b829a;
+
+  --liquid-glass-bg: radial-gradient(
+    circle at 50% 30%,
+    rgba(18, 35, 56, 0.85) 0%,
+    rgba(10, 18, 30, 0.92) 100%
+  );
+  --folder-back-bg: #1b4871;
+  --folder-cover-bg: #122338;
+  --folder-text-color: #ffffff;
+  --folder-border: 1px solid var(--win-border);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background-attachment: fixed;
+  font-family: "Courier New", monospace, sans-serif;
+  height: 100vh;
+  background: var(--sky-bg) !important;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  transition: background 0.6s ease;
+}
+
+/* ================= 日夜模式切换按钮 ================= */
+.theme-toggle {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 100000;
+  background: var(--win-bg1);
+  /* background-color: #ffffff4c; */
+
+  border: 1.5px solid var(--win-border);
+  color: var(--text-main);
+
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 20px;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 2px 3px 0px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+.theme-toggle:hover {
+  transform: translateY(-2px);
+}
+
+/* ================= 星空 Canvas ================= */
+#stars-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60vh;
+  pointer-events: none;
+  z-index: 1;
+  opacity: var(--stars-opacity);
+  transition: opacity 0.8s ease;
+}
+
+/* ================= 开场液态玻璃 Overlay ================= */
+.intro-overlay,
+#intro-overlay {
+  background: var(--sky-bg1) !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: none !important;
+}
+
+[data-theme="dark"] #portal-canvas {
+  filter: drop-shadow(0 0 35px rgba(22, 35, 59, 0.8));
+}
+
+[data-theme="dark"] .click-hint {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* 隐藏 Overlay */
+.intro-overlay.hidden,
+#intro-overlay.hidden {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+.folder-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  margin: 0 !important;
+  width: 270px;
+  height: 185px;
+  cursor: pointer;
+  perspective: 1000px;
+}
+
+.folder-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--folder-back-bg);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: background 0.5s ease;
+}
+
+.folder-back::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  width: 95px;
+  height: 22px;
+  background: var(--folder-back-bg);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  transition: background 0.5s ease;
+}
+
+.folder-cards {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 230px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.preview-card {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  border-radius: 10px;
+  padding: 10px 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--win-border);
+  background: var(--win-bg);
+  backdrop-filter: blur(12px);
+  transition:
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.3s ease,
+    background 0.5s ease,
+    border-color 0.5s ease;
+  transform-origin: bottom center;
+}
+
+.card-web-main {
+  bottom: 0;
+  transform: translateY(30px) scale(0.85);
+  opacity: 0;
+}
+.card-folder-sub {
+  bottom: 0;
+  border-left: 4px solid var(--accent-color);
+  transform: translateY(45px) scale(0.78);
+  opacity: 0;
+}
+.card-doc-sub {
+  bottom: 0;
+  transform: translateY(60px) scale(0.7);
+  opacity: 0;
+}
+.card-web-sub {
+  bottom: 0;
+  transform: translateY(75px) scale(0.65);
+  opacity: 0;
+}
+
+.card-header-dots {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.card-header-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.card-body-skeleton {
+  font-size: 12px;
+  color: var(--text-main);
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.5s ease;
+}
+
+.folder-cover {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 85%;
+  background: var(--folder-cover-bg);
+  border: var(--folder-border);
+  border-radius: 14px;
+  z-index: 3;
+  transform-origin: bottom;
+  transition:
+    transform 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+    background 0.5s ease,
+    border-color 0.5s ease;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 18px 20px;
+  color: var(--folder-text-color);
+}
+
+.folder-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+.folder-sub {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+.folder-wrapper:hover .folder-cover {
+  transform: rotateX(-50deg);
+}
+.folder-wrapper:hover .card-web-main {
+  transform: translateY(-40px) scale(0.98) rotate(-1deg);
+  opacity: 1;
+  transition-delay: 0.02s;
+}
+.folder-wrapper:hover .card-folder-sub {
+  transform: translateY(-75px) scale(0.92) rotate(4deg);
+  opacity: 1;
+  transition-delay: 0.07s;
+}
+.folder-wrapper:hover .card-doc-sub {
+  transform: translateY(-110px) scale(0.86) rotate(-3deg);
+  opacity: 0.95;
+  transition-delay: 0.12s;
+}
+.folder-wrapper:hover .card-web-sub {
+  transform: translateY(-145px) scale(0.8) rotate(2deg);
+  opacity: 0.9;
+  transition-delay: 0.17s;
+}
+
+.click-hint {
+  position: absolute;
+  bottom: 12%;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-main);
+  opacity: 0.8;
+  letter-spacing: 0.5px;
+  transition: color 0.5s ease;
+}
+
+/* ================= 窗口通用样式 ================= */
+.window {
+  background: var(--win-bg);
+  border: 2px solid var(--win-border);
+  border-radius: 10px;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  display: none;
+  overflow: hidden;
+  transition:
+    background 0.5s ease,
+    border-color 0.5s ease;
+}
+
+.window-header {
+  background: var(--win-header-bg);
+  color: var(--win-header-text);
+  padding: 16px 20px;
+  font-size: 20px;
+  cursor: grab;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--win-border);
+  transition:
+    background 0.5s ease,
+    color 0.5s ease,
+    border-color 0.5s ease;
+}
+.window-header:active {
+  cursor: grabbing;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--win-header-text);
+  cursor: pointer;
+  font-size: 14px;
+  font-family: inherit;
+}
+.close-btn:hover {
+  color: var(--accent-color);
+}
+
+.window-body {
+  padding: 20px;
+  color: var(--text-main);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: calc(100% - 35px);
+}
+
+/* 主窗口 (Home) */
+#home-window {
+  height: 550px;
+  width: 90%;
+  max-width: 90vh;
+  display: none; /* 初始隐藏 */
+  text-align: center;
+}
+
+.title {
+  font-size: 50px;
+  font-weight: bold;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+.title span {
+  color: var(--accent-color);
+  transition: color 0.5s ease;
+}
+
+.subtitle {
+  font-size: 20px;
+  color: var(--text-sub);
+  margin-bottom: 30px;
+  transition: color 0.5s ease;
+}
+
+.nav-icons {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 380px;
+  margin-top: 30px;
+  gap: 15px;
+}
+
+.nav-item {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-main);
+  font-size: 12px;
+  font-family: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition:
+    transform 0.1s,
+    color 0.3s ease;
+}
+.nav-item:hover {
+  transform: scale(1.1);
+  color: var(--accent-color);
+}
+.nav-item .icon {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+/* 子窗口特有样式 */
+.sub-window {
+  width: 85%;
+  max-width: 420px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+.avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px solid var(--win-border);
+  background: #fed7aa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+}
+.profile-info h2 {
+  font-size: 18px;
+  color: var(--accent-color);
+}
+.profile-info p {
+  font-size: 12px;
+  color: var(--text-sub);
+}
+
+/* 页脚 */
+.footer {
+  position: absolute;
+  bottom: 12px;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  color: var(--footer-color);
+  pointer-events: none;
+  z-index: 10;
+  transition: color 0.5s ease;
+}
+
+/* 传送门容器 */
+.portal-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 750px;
+  height: 750px;
+  z-index: 1;
+  pointer-events: none;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  filter: none !important;
+  animation: portalPulse 3s infinite alternate ease-in-out;
+}
+
+#portal-canvas {
+  width: 100%;
+  height: 100%;
+  background: transparent !important;
+  filter: drop-shadow(0 0 25px rgba(113, 186, 255, 0.45));
+  transition: filter 0.5s ease;
+}
+
+@keyframes portalPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.97) rotate(-1deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.03) rotate(1deg);
+  }
+}
+
+/* ================= 🌟 新增：主窗口弹跳动画 ================= */
+@keyframes windowPopOut {
+  0% {
+    opacity: 0;
+    transform: scale(0.15);
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.window-pop-out {
+  animation: windowPopOut 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards !important;
+}
