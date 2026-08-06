@@ -38,7 +38,7 @@
 | 项目名称            | 说明                                                    | 技术栈                     | 在线演示                                                  |
 | :------------------ | :------------------------------------------------------ | :------------------------- | :-------------------------------------------------------- |
 | **Omnifood**        | 现代化健康餐订阅服务 Landing Page，支持全设备响应式布局 | HTML5, CSS3, Flexbox, Grid | [Live Demo](https://omnifood-zyz.netlify.app/)            |
-| **Pig Game**        | 双人回合制摇骰子竞技小游戏，包含状态管理与交互动画      | JS (ES6), DOM 操作, CSS    | [Live Demo](你的PigGame预览链接)                          |
+| **Pig Game**        | 双人回合制摇骰子竞技小游戏，包含状态管理与交互动画      | JS (ES6), DOM 操作, CSS    | [Live Demo](zyz-cyber.github.io/Pig-Game/)                |
 | **Guess My Number** | 经典数字猜谜游戏，支持得分计算与历史最高分记录          | JS (ES6), DOM 操作, CSS    | [Live Demo](https://zyz-cyber.github.io/Guess-My-Number/) |
 
 ---
