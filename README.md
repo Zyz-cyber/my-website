@@ -13,7 +13,7 @@
 - 💻 **方向**：前端开发学习者 / 响应式 Web 开发者
 - 🎯 **目标**：专注打造高性能、用户体验优秀且现代化的 Web 应用
 - 📖 **近况**：正在深入学习 JavaScript (ES6+)、React 及 Web 性能优化
-- 📬 **联系方式**：[我的邮箱zhao_yuanzhuo@outlook.com] | [我的 GitHub 主页](https://github.com/Zyz-cyber)
+- 📬 **联系方式**：[zhao_yuanzhuo@outlook.com] | [我的 GitHub 主页](https://github.com/Zyz-cyber)
 
 ---
 
