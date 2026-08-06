@@ -13,7 +13,7 @@
 - 💻 **方向**：前端开发学习者 / 响应式 Web 开发者
 - 🎯 **目标**：专注打造高性能、用户体验优秀且现代化的 Web 应用
 - 📖 **近况**：正在深入学习 JavaScript (ES6+)、React 及 Web 性能优化
-- 📬 **联系方式**：[我的邮箱@example.com] | [我的 GitHub 主页](https://github.com/你的用户名)
+- 📬 **联系方式**：[我的邮箱zhao_yuanzhuo@outlook.com] | [我的 GitHub 主页](https://github.com/Zyz-cyber)
 
 ---
 
@@ -35,11 +35,11 @@
 
 ## 🌟 精选展示项目 (Featured Projects)
 
-| 项目名称            | 说明                                                    | 技术栈                     | 在线演示                             |
-| :------------------ | :------------------------------------------------------ | :------------------------- | :----------------------------------- |
-| **Omnifood**        | 现代化健康餐订阅服务 Landing Page，支持全设备响应式布局 | HTML5, CSS3, Flexbox, Grid | [Live Demo](你的Omnifood预览链接)    |
-| **Pig Game**        | 双人回合制摇骰子竞技小游戏，包含状态管理与交互动画      | JS (ES6), DOM 操作, CSS    | [Live Demo](你的PigGame预览链接)     |
-| **Guess My Number** | 经典数字猜谜游戏，支持得分计算与历史最高分记录          | JS (ES6), DOM 操作, CSS    | [Live Demo](你的GuessNumber预览链接) |
+| 项目名称            | 说明                                                    | 技术栈                     | 在线演示                                                  |
+| :------------------ | :------------------------------------------------------ | :------------------------- | :-------------------------------------------------------- |
+| **Omnifood**        | 现代化健康餐订阅服务 Landing Page，支持全设备响应式布局 | HTML5, CSS3, Flexbox, Grid | [Live Demo](https://omnifood-zyz.netlify.app/)            |
+| **Pig Game**        | 双人回合制摇骰子竞技小游戏，包含状态管理与交互动画      | JS (ES6), DOM 操作, CSS    | [Live Demo](你的PigGame预览链接)                          |
+| **Guess My Number** | 经典数字猜谜游戏，支持得分计算与历史最高分记录          | JS (ES6), DOM 操作, CSS    | [Live Demo](https://zyz-cyber.github.io/Guess-My-Number/) |
 
 ---
 
@@ -59,3 +59,20 @@
    ```bash
    git clone [https://github.com/你的用户名/你的仓库名.git](https://github.com/你的用户名/你的仓库名.git)
    ```
+2. **进入项目目录**
+
+   ```bash
+   cd 你的仓库名
+
+   ```
+
+3. **运行项目**
+   直接用浏览器打开 index.html，或在 VS Code 中使用 Live Server 扩展启动本地服务器预览。
+
+---
+
+### 💡 搭配使用建议：
+
+1. **徽章（Badges）**：模板中自带了 HTML/CSS/JS/Git 的彩色技术标签，在 GitHub 上渲染出来非常好看。
+2. **项目表格**：把之前做过的 `Omnifood`、`Pig Game` 等项目链接填进表格里，访问者可以直接从你的主页跳转到各个独立项目的在线演示页。
+3. **主页置顶**：上传完成后，可以在 GitHub 个人主页把这个仓库 **Pin（置顶）** 到最上方！
